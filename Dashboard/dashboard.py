@@ -27,7 +27,7 @@ def create_monthly_df(df, pollutant):
 def load_data():
     try:
         # Pastikan file csv ada di folder yang sama
-        df = pd.read_csv("Dashboard/all_stations_df.csv")
+        df = pd.read_csv("all_stations_df.csv")
         # Gabungkan kolom waktu menjadi datetime
         df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour']])
         return df
@@ -54,25 +54,6 @@ st.sidebar.image("https://cdn-icons-png.flaticon.com/512/3222/3222806.png", widt
 station_list = sorted(all_df['station'].unique().tolist())
 selected_stations = st.sidebar.multiselect("Pilih Stasiun:", station_list, default=station_list)
 
-# 2. Filter Waktu (Rentang Tanggal)
-min_date = all_df["datetime"].min().date()
-max_date = all_df["datetime"].max().date()
-
-# Menggunakan try-except untuk menangani input tanggal yang belum lengkap
-try:
-    date_input = st.sidebar.date_input(
-        "Rentang Tanggal:",
-        min_value=min_date,
-        max_value=max_date,
-        value=[min_date, max_date]
-    )
-    # Validasi jika user baru memilih satu tanggal
-    if len(date_input) == 2:
-        start_date, end_date = date_input
-    else:
-        start_date, end_date = min_date, max_date
-except ValueError:
-    start_date, end_date = min_date, max_date
 
 # 3. Filter Lanjutan (Bulan/Tahun) - Fitur dari kode awal
 with st.sidebar.expander("Filter Lanjutan (Bulan/Tahun)"):
@@ -95,12 +76,6 @@ selected_pollutant = st.sidebar.radio("Pilih Parameter Polutan:", pollutant_opti
 # --- LOGIKA FILTERING ---
 # Filter 1: Stasiun
 main_df = all_df[all_df['station'].isin(selected_stations)]
-
-# Filter 2: Rentang Tanggal
-main_df = main_df[
-    (main_df["datetime"].dt.date >= start_date) & 
-    (main_df["datetime"].dt.date <= end_date)
-]
 
 # Filter 3: Tahun (Jika tidak pilih 'Semua')
 if selected_year != 'Semua':
