@@ -27,7 +27,7 @@ def create_monthly_df(df, pollutant):
 def load_data():
     try:
         # Pastikan file csv ada di folder yang sama
-        df = pd.read_csv("all_stations_df.csv")
+        df = pd.read_csv("Dashboard/all_stations_df.csv")
         # Gabungkan kolom waktu menjadi datetime
         df['datetime'] = pd.to_datetime(df[['year', 'month', 'day', 'hour']])
         return df
